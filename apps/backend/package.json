@@ -7,5 +7,7 @@
     "email": "nurlimandiara@gmail.com",
     "url": "https://nurliman.dev"
   },
-  "scripts": {}
+  "scripts": {
+    "dev": "poetry run python dev.py"
+  }
 }
