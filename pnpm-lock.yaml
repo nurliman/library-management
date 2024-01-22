@@ -18,9 +18,9 @@ importers:
         specifier: ^1.11.3
         version: 1.11.3
 
-  apps/backend: {}
+  backend: {}
 
-  apps/frontend:
+  frontend:
     dependencies:
       next:
         specifier: 14.1.0
