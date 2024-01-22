@@ -1,0 +1,11 @@
+{
+  "name": "@zapps-library/backend",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "Nurliman Diara",
+    "email": "nurlimandiara@gmail.com",
+    "url": "https://nurliman.dev"
+  },
+  "scripts": {}
+}
