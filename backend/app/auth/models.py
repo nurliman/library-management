@@ -1,6 +1,4 @@
-from __future__ import annotations
 from app import db
-from typing import TYPE_CHECKING
 from enum import Enum
 from dataclasses import dataclass
 from dataclasses_json import LetterCase, dataclass_json
@@ -9,9 +7,6 @@ from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-
-if TYPE_CHECKING:
-    from ..borrow.models import BorrowedBook
 
 
 class UserRole(str, Enum):
