@@ -1,14 +1,20 @@
+from __future__ import annotations
 from app import db
+from typing import TYPE_CHECKING
 from enum import Enum
 from dataclasses import dataclass
 from dataclasses_json import LetterCase, dataclass_json
 from flask_jwt_extended import create_access_token, create_refresh_token
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 
+if TYPE_CHECKING:
+    from ..borrow.models import BorrowedBook
 
-class UserRole(Enum):
+
+# TODO: change `superuser` to `super_admin`
+class UserRole(str, Enum):
     SUPERUSER = "superuser"
     ADMIN = "admin"
     MEMBER = "member"
@@ -17,10 +23,11 @@ class UserRole(Enum):
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class User(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     username: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
     role: Mapped[UserRole] = mapped_column(default=UserRole.MEMBER)
+    
     password_hash: Mapped[str]
 
     def set_password(self, value: str) -> None:

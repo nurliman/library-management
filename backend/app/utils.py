@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from flask import jsonify
 
 
@@ -60,3 +61,9 @@ def is_valid_url(value: str) -> bool:
     )
 
     return bool(re.match(url_pattern, value))
+
+
+def is_date_in_future(date: datetime):
+    """Check if a datetime is in the future."""
+    # print type of date
+    return datetime.now() < date
