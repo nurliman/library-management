@@ -23,7 +23,7 @@ def get_borrowed_books():
 @blueprint.route("/api/borrowed-books", methods=["POST"])
 @jwt_required()
 def borrow_book():
-    """Create a borrowed book."""
+    """Member borrows a book."""
     data = request.get_json()
     valid_data = {}
 
