@@ -5,6 +5,7 @@ from enum import Enum
 from dataclasses import dataclass
 from dataclasses_json import LetterCase, dataclass_json
 from flask_jwt_extended import create_access_token, create_refresh_token
+from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
@@ -23,11 +24,14 @@ class UserRole(str, Enum):
 @dataclass
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    username: Mapped[str] = mapped_column(unique=True)
-    email: Mapped[str] = mapped_column(unique=True)
-    role: Mapped[UserRole] = mapped_column(default=UserRole.MEMBER)
-
-    password_hash: Mapped[str]
+    username: Mapped[str] = mapped_column(String(128), unique=True)
+    email: Mapped[str] = mapped_column(String(128), unique=True)
+    role: Mapped[UserRole] = mapped_column(
+        String(64),
+        default=UserRole.MEMBER.value,
+        server_default=UserRole.MEMBER.value,
+    )
+    password_hash: Mapped[str] = mapped_column(Text(), nullable=False)
 
     def set_password(self, value: str) -> None:
         """Store the password as a hash for security."""
@@ -54,7 +58,7 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "role": self.role.value,
+            "role": self.role,
         }
 
 

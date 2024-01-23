@@ -3,6 +3,7 @@ from app import db
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 from dataclasses_json import LetterCase, dataclass_json
+from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
@@ -13,6 +14,6 @@ if TYPE_CHECKING:
 @dataclass
 class Book(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(nullable=False)
-    author: Mapped[str] = mapped_column(nullable=False)
-    image_url: Mapped[str] = mapped_column()
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    author: Mapped[str] = mapped_column(String(255), nullable=False)
+    image_url: Mapped[str] = mapped_column(Text())
