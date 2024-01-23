@@ -13,9 +13,8 @@ if TYPE_CHECKING:
     from ..borrow.models import BorrowedBook
 
 
-# TODO: change `superuser` to `super_admin`
 class UserRole(str, Enum):
-    SUPERUSER = "superuser"
+    SUPERADMIN = "superadmin"
     ADMIN = "admin"
     MEMBER = "member"
 
@@ -27,7 +26,7 @@ class User(db.Model):
     username: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
     role: Mapped[UserRole] = mapped_column(default=UserRole.MEMBER)
-    
+
     password_hash: Mapped[str]
 
     def set_password(self, value: str) -> None:
