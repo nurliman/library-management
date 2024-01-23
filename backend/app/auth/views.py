@@ -2,6 +2,7 @@ from app import db
 from app.auth.models import User
 from app.utils import is_email, make_error_response, make_success_response
 from flask import Blueprint, request
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 
 blueprint = Blueprint("auth", __name__)
@@ -99,3 +100,25 @@ def register():
     db.session.commit()
 
     return make_success_response(user.safe_dict, "Registration successful")
+
+
+@blueprint.route("/api/auth/refresh-token", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh_token():
+    """Refresh a user's token."""
+    identity = get_jwt_identity()
+
+    user: User = User.query.get(identity)
+
+    if not user:
+        return make_error_response(404, "User not found")
+
+    credentials = user.create_credentials()
+
+    return make_success_response(
+        {
+            "user": user.safe_dict,
+            "credentials": credentials,
+        },
+        "Token refreshed",
+    )
