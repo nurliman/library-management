@@ -1,4 +1,5 @@
 from app import db
+from enum import Enum
 from dataclasses import dataclass
 from dataclasses_json import LetterCase, dataclass_json
 from flask_jwt_extended import create_access_token, create_refresh_token
@@ -7,12 +8,19 @@ from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 
 
+class UserRole(Enum):
+    SUPERUSER = "superuser"
+    ADMIN = "admin"
+    MEMBER = "member"
+
+
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(unique=True)
     email: Mapped[str] = mapped_column(unique=True)
+    role: Mapped[UserRole] = mapped_column(default=UserRole.MEMBER)
     password_hash: Mapped[str]
 
     def set_password(self, value: str) -> None:
@@ -40,6 +48,7 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "email": self.email,
+            "role": self.role.value,
         }
 
 
