@@ -11,7 +11,7 @@ import Image from "next/image";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard" },
-  { name: "Book Management", href: "/books" },
+  { name: "Books", href: "/books" },
   { name: "Borrowing", href: "/borrowing" },
   { name: "Returning", href: "/returning" },
   { name: "User Management", href: "/users" },
