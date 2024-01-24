@@ -1,5 +1,5 @@
 from app import db
-from app.auth.models import User
+from app.users.models import User
 from app.books.models import Book
 from datetime import datetime, timezone
 from dataclasses import dataclass

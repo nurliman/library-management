@@ -1,4 +1,4 @@
-import type { CredentialUser, User } from "@/types";
+import type { CredentialUser } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authApi } from "@/api/auth";
 import { jotaiStore } from "@/store/jotaiStore";
@@ -6,29 +6,18 @@ import { accessTokenAtom } from "@/store/accessTokenAtom";
 import { refreshTokenAtom } from "@/store/refreshTokenAtom";
 import { isAuthenticatedAtom } from "@/store/isAuthenticatedAtom";
 
-type AuthState = {
-  user: User | null;
-};
+type AuthState = {};
 
-const initialState: AuthState = {
-  user: null,
-};
+const initialState: AuthState = {};
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     setCredentialUser: (
-      state,
+      _state,
       action: PayloadAction<CredentialUser & { isAuthenticated: boolean }>,
     ) => {
-      state.user = {
-        id: action.payload.user.id,
-        username: action.payload.user.username,
-        email: action.payload.user.email,
-        role: action.payload.user.role,
-      };
-
       jotaiStore.set(accessTokenAtom, action.payload.credentials.access_token);
       jotaiStore.set(refreshTokenAtom, action.payload.credentials.refresh_token);
       jotaiStore.set(isAuthenticatedAtom, action.payload.isAuthenticated);
@@ -42,13 +31,6 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addMatcher(authApi.endpoints.login.matchFulfilled, (state, action) => {
       if (action.payload) {
-        state.user = {
-          id: action.payload.user.id,
-          username: action.payload.user.username,
-          email: action.payload.user.email,
-          role: action.payload.user.role,
-        };
-
         jotaiStore.set(accessTokenAtom, action.payload.credentials.access_token);
         jotaiStore.set(refreshTokenAtom, action.payload.credentials.refresh_token);
         jotaiStore.set(isAuthenticatedAtom, true);

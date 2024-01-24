@@ -1,5 +1,5 @@
 from app import db
-from app.auth.models import User
+from app.users.models import User
 from app.utils import is_email, make_error_response, make_success_response
 from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required

@@ -1,5 +1,5 @@
 from app import db
-from app.auth.models import User
+from app.users.models import User
 from app.books.models import Book
 from app.returned.models import ReturnedBook
 from app.returned.schemas import returned_book_schema

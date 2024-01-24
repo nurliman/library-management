@@ -4,7 +4,7 @@ import { env } from "@/env.mjs";
 
 const base = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: env.NEXT_PUBLIC_BASE_URL }),
-  tagTypes: ["Books"],
+  tagTypes: ["Books", "Users"],
   endpoints: () => ({}),
 });
 

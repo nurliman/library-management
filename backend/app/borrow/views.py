@@ -1,5 +1,5 @@
 from app import db
-from app.auth.models import User
+from app.users.models import User
 from app.books.models import Book
 from app.borrow.models import BorrowedBook
 from app.borrow.schemas import borrowed_book_schema
