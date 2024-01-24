@@ -1,15 +1,13 @@
 "use client";
 
 import { Card, Title, Text, TextInput, Button } from "@tremor/react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { useLoginMutation } from "@/api/auth";
 import isEmail from "is-email";
-
-// export const dynamic = "force-dynamic";
 
 const schema = z.object({
   username: z.string().min(1),

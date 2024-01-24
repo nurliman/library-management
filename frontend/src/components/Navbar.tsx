@@ -2,7 +2,7 @@
 
 import { clsx } from "clsx";
 import { Fragment } from "react";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
@@ -21,7 +21,8 @@ export type NavbarProps = {
 };
 
 export default function Navbar({ user }: NavbarProps) {
-  const pathname = usePathname();
+  const router = useRouter();
+  const pathname = router.pathname;
 
   const signIn = (provider: string) => {
     throw new Error(`Not implemented: signIn(${provider})`);

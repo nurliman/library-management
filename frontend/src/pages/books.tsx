@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,8 +23,7 @@ import {
   Button,
   TextInput,
 } from "@tremor/react";
-
-// export const dynamic = "force-dynamic";
+import AppLayout from "@/components/AppLayout";
 
 const addBookSchema = z.object({
   author: z.string().min(1),
@@ -254,4 +253,8 @@ const BookItem = ({ data }: any) => {
       </Dialog>
     </>
   );
+};
+
+BooksPage.getLayout = (page: ReactElement) => {
+  return <AppLayout>{page}</AppLayout>;
 };
