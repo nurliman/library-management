@@ -24,13 +24,9 @@ import {
   Bold,
 } from "@tremor/react";
 import AppLayout from "@/components/AppLayout";
-import { useRouter } from "next/router";
+import { UserRole } from "@/constants";
 
-const UserRole = {
-  SUPERADMIN: "superadmin",
-  ADMIN: "admin",
-  MEMBER: "member",
-} as const;
+
 
 const addUserSchema = z.object({
   username: z.string().min(1),
@@ -173,7 +169,6 @@ export default function UsersPage() {
 }
 
 const UserItem = ({ data }: { data: any }) => {
-  const router = useRouter();
   const [isEditOpen, setEditOpen] = useState(false);
   const [isDetailsOpen, setDetailsOpen] = useState(false);
   const [deleteUser, { isLoading: isDeletingUserLoading }] = useDeleteUserMutation();

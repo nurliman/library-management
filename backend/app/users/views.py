@@ -1,5 +1,6 @@
 from app import db
-from app.users.models import User
+from app.rbac import check_access
+from app.users.models import User, UserRole
 from app.users.schemas import add_user_schema, edit_user_schema
 from app.utils import make_error_response, make_success_response
 from flask import Blueprint, request
@@ -20,7 +21,7 @@ def get_me():
 
 
 @blueprint.route("/api/users", methods=["GET"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN])
 def get_users():
     """Get all users."""
     users = User.query.all()
@@ -28,7 +29,7 @@ def get_users():
 
 
 @blueprint.route("/api/users", methods=["POST"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN])
 def create_user():
     """Create a new user."""
     data = request.get_json()
@@ -63,7 +64,7 @@ def create_user():
 
 
 @blueprint.route("/api/users/<int:user_id>", methods=["PATCH"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN])
 def edit_user(user_id):
     """Edit a user."""
     user = User.query.get(user_id)
@@ -109,7 +110,7 @@ def edit_user(user_id):
 
 
 @blueprint.route("/api/users/<int:user_id>", methods=["DELETE"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN])
 def delete_user(user_id):
     """Delete a user."""
     user = User.query.get(user_id)

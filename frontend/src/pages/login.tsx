@@ -1,12 +1,11 @@
 "use client";
 
-import { Card, Title, Text, TextInput, Button } from "@tremor/react";
-import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { useLoginMutation } from "@/api/auth";
+import { Card, Title, Text, TextInput, Button } from "@tremor/react";
 import isEmail from "is-email";
 
 const schema = z.object({
@@ -17,8 +16,6 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
-  const router = useRouter();
-
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
 
   const {
@@ -40,7 +37,6 @@ export default function LoginPage() {
     login(payload)
       .unwrap()
       .then(() => {
-        router.push("/dashboard");
         toast.success("Logged in successfully");
       })
       .catch((err) => {

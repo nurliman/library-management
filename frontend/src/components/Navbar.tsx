@@ -3,28 +3,21 @@
 import { clsx } from "clsx";
 import { Fragment } from "react";
 import { useRouter } from "next/router";
-import { useGetMeQuery } from "@/api/users";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useMe } from "@/hooks/useMe";
 import { useAppDispatch } from "@/hooks/redux";
+import { useRoutesByRole } from "@/hooks/useRoutesByRole";
 import { logout } from "@/store/authSlice";
 import Image from "next/image";
-
-const navigation = [
-  { name: "Dashboard", href: "/dashboard" },
-  { name: "Books", href: "/books" },
-  { name: "Borrowing", href: "/borrowing" },
-  { name: "Returning", href: "/returning" },
-  { name: "Users", href: "/users" },
-  { name: "Settings", href: "/settings" },
-];
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathname = router.pathname;
 
-  const { data: user } = useGetMeQuery();
+  const user = useMe();
+  const routes = useRoutesByRole();
 
   const signOut = () => {
     dispatch(logout());
@@ -56,7 +49,7 @@ export default function Navbar() {
                   </svg>
                 </div>
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                  {navigation.map((item) => (
+                  {routes.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
@@ -139,7 +132,7 @@ export default function Navbar() {
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pb-3 pt-2">
-              {navigation.map((item) => (
+              {routes.map((item) => (
                 <Disclosure.Button
                   key={item.name}
                   as="a"
