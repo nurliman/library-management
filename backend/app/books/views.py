@@ -66,6 +66,9 @@ def update_book(book_id):
     if "image_url" in data and not is_valid_url(data["image_url"]):
         errors.append("Invalid image_url")
 
+    if "image_url" in data:
+        book.image_url = data["image_url"]
+
     if len(errors) > 0:
         return make_error_response(400, errors)
 
