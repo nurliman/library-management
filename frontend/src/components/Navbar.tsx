@@ -10,7 +10,7 @@ import { logout } from "@/store/authSlice";
 import Image from "next/image";
 
 const navigation = [
-  { name: "Dashboard", href: "/" },
+  { name: "Dashboard", href: "/dashboard" },
   { name: "Book Management", href: "/books" },
   { name: "Borrowing", href: "/borrowing" },
   { name: "Returning", href: "/returning" },
