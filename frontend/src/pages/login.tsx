@@ -59,33 +59,35 @@ export default function LoginPage() {
       <Title>Login</Title>
       <Text>Log in to your account.</Text>
 
-      <Card className="mt-6 space-y-4">
-        <div className="space-y-2">
-          <Text>Username/Email</Text>
+      <Card className="mt-6">
+        <form className="space-y-4" onSubmit={onSubmit}>
+          <div className="space-y-2">
+            <Text>Username/Email</Text>
 
-          <TextInput
-            placeholder="Username/Email"
-            type="text"
-            {...register("username")}
-            error={!!errors.username?.message}
-            errorMessage={errors.username?.message?.toString()}
-          />
-        </div>
+            <TextInput
+              placeholder="Username/Email"
+              type="text"
+              {...register("username")}
+              error={!!errors.username?.message}
+              errorMessage={errors.username?.message?.toString()}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Text>Password</Text>
-          <TextInput
-            type="password"
-            placeholder="Password"
-            {...register("password")}
-            error={!!errors.password?.message}
-            errorMessage={errors.password?.message?.toString()}
-          />
-        </div>
+          <div className="space-y-2">
+            <Text>Password</Text>
+            <TextInput
+              type="password"
+              placeholder="Password"
+              {...register("password")}
+              error={!!errors.password?.message}
+              errorMessage={errors.password?.message?.toString()}
+            />
+          </div>
 
-        <Button type="button" onClick={onSubmit} loading={isLoginLoading} disabled={isLoginLoading}>
-          Login
-        </Button>
+          <Button type="submit" loading={isLoginLoading} disabled={isLoginLoading}>
+            Login
+          </Button>
+        </form>
       </Card>
     </main>
   );

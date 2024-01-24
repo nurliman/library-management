@@ -80,7 +80,7 @@ export default function BooksPage() {
       <Dialog open={isOpen || isAddingBookLoading} onClose={(val) => setIsOpen(val)} static={true}>
         <DialogPanel>
           <Title className="mb-3">Add book</Title>
-          <div className="mt-3 space-y-4">
+          <form className="mt-3 space-y-4" onSubmit={onSubmit}>
             <div className="space-y-2">
               <Text>Title</Text>
               <TextInput
@@ -111,10 +111,25 @@ export default function BooksPage() {
                 errorMessage={errors.image_url?.message?.toString()}
               />
             </div>
-            <Button onClick={onSubmit} loading={isAddingBookLoading} disabled={isAddingBookLoading}>
-              Submit
-            </Button>
-          </div>
+            <div className="mt-5 flex items-center space-x-4">
+              <Button type="submit" loading={isAddingBookLoading} disabled={isAddingBookLoading}>
+                Submit
+              </Button>
+              <Button
+                variant="light"
+                color="red"
+                type="button"
+                loading={isAddingBookLoading}
+                disabled={isAddingBookLoading}
+                onClick={() => {
+                  reset();
+                  setIsOpen(false);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
         </DialogPanel>
       </Dialog>
     </main>
@@ -209,8 +224,8 @@ const BookItem = ({ data }: any) => {
       </ListItem>
       <Dialog open={isOpen} onClose={(val) => setIsOpen(val)} static={true}>
         <DialogPanel>
-          <Title className="mb-3">Add book</Title>
-          <div className="mt-3 space-y-4">
+          <Title className="mb-3">Edit book</Title>
+          <form className="mt-3 space-y-4" onSubmit={handleSubmitEdit}>
             <div className="space-y-2">
               <Text>Title</Text>
               <TextInput
@@ -241,14 +256,25 @@ const BookItem = ({ data }: any) => {
                 errorMessage={errors.image_url?.message?.toString()}
               />
             </div>
-            <Button
-              onClick={handleSubmitEdit}
-              loading={isEditingBookLoading}
-              disabled={isEditingBookLoading}
-            >
-              Submit
-            </Button>
-          </div>
+            <div className="mt-5 flex items-center space-x-4">
+              <Button type="submit" loading={isEditingBookLoading} disabled={isEditingBookLoading}>
+                Submit
+              </Button>
+              <Button
+                variant="light"
+                color="red"
+                type="button"
+                loading={isEditingBookLoading}
+                disabled={isEditingBookLoading}
+                onClick={() => {
+                  reset();
+                  setIsOpen(false);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
         </DialogPanel>
       </Dialog>
     </>
