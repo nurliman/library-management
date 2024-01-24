@@ -3,6 +3,7 @@ import axiosRetry from "axios-retry";
 import { logout, setCredentialUser } from "@/store/authSlice";
 import type { AxiosRequestConfig, AxiosError } from "axios";
 import type { BaseQueryFn } from "@reduxjs/toolkit/query";
+import type { CredentialUser, Nullable } from "@/types";
 
 let theAxios: AxiosInstance | null;
 
@@ -71,11 +72,14 @@ export const axiosBaseQuery = ({
                 api.dispatch(logout());
               }
             });
-          if (!res?.data?.data?.access_token) {
-            return false;
-          }
-          api.dispatch(setCredentialUser({ ...res.data.data, isAuthenticated: true }));
-          error.config?.headers?.set?.("Authorization", `Bearer ${res.data.data.access_token}`);
+
+          const responseData: Nullable<CredentialUser> = res?.data?.data;
+          const access_token = responseData?.credentials.access_token;
+
+          if (!access_token) return false;
+
+          api.dispatch(setCredentialUser({ ...responseData, isAuthenticated: true }));
+          error.config?.headers?.set?.("Authorization", `Bearer ${access_token}`);
           return true;
         },
       });
