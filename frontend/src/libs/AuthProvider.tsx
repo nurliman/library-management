@@ -1,13 +1,15 @@
 "use client";
 
-import { useAppSelector } from "@/hooks/redux";
-import { usePathname, useRouter } from "next/navigation";
+import { useAtomValue } from "jotai";
+import { isAuthenticatedAtom } from "@/store/isAuthenticatedAtom";
+import { useRouter } from "next/router";
 import { PropsWithChildren, useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function AuthProvider({ children }: PropsWithChildren<object>) {
   const router = useRouter();
-  const pathname = usePathname();
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const pathname = router.pathname;
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom);
 
   useEffect(() => {
     if (pathname === "/login" && isAuthenticated) {
@@ -17,6 +19,7 @@ export default function AuthProvider({ children }: PropsWithChildren<object>) {
 
     if (pathname !== "/login" && !isAuthenticated) {
       router.push("/login");
+      toast.error("Unauthorized, Please login");
     }
   }, [isAuthenticated, pathname]);
 

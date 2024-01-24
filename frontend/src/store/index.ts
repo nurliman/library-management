@@ -1,2 +1,2 @@
-export * from "./store";
-export { default } from "./store";
+export * from "./reduxStore";
+export { jotaiStore } from "./jotaiStore";
