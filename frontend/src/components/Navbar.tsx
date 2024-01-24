@@ -14,7 +14,7 @@ const navigation = [
   { name: "Books", href: "/books" },
   { name: "Borrowing", href: "/borrowing" },
   { name: "Returning", href: "/returning" },
-  { name: "User Management", href: "/users" },
+  { name: "Users", href: "/users" },
   { name: "Settings", href: "/settings" },
 ];
 
