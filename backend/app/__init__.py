@@ -53,11 +53,12 @@ def create_app():
 
     # apply the blueprints to the app
 
-    from app import auth, books, borrow, returned
+    from app import auth, books, borrow, returned, dashboard
 
     app.register_blueprint(auth.blueprint)
     app.register_blueprint(books.blueprint)
     app.register_blueprint(borrow.blueprint)
     app.register_blueprint(returned.blueprint)
+    app.register_blueprint(dashboard.blueprint)
 
     return app
