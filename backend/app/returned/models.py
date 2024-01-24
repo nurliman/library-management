@@ -12,8 +12,12 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 @dataclass
 class ReturnedBook(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    book_id: Mapped[int] = mapped_column(ForeignKey(Book.id), nullable=False)
-    member_id: Mapped[int] = mapped_column(ForeignKey(User.id), nullable=False)
+    book_id: Mapped[int] = mapped_column(
+        ForeignKey(Book.id, ondelete="CASCADE"), nullable=False
+    )
+    member_id: Mapped[int] = mapped_column(
+        ForeignKey(User.id, ondelete="CASCADE"), nullable=False
+    )
     return_date: Mapped[datetime] = mapped_column(
         default=lambda: datetime.now(timezone.utc),
         nullable=False,
