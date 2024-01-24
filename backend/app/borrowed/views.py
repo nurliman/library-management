@@ -1,8 +1,8 @@
 from app import db
 from app.users.models import User
 from app.books.models import Book
-from app.borrow.models import BorrowedBook
-from app.borrow.schemas import borrowed_book_schema
+from app.borrowed.models import BorrowedBook
+from app.borrowed.schemas import borrowed_book_schema
 from app.utils import make_error_response, make_success_response
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
