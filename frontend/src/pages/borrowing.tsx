@@ -150,7 +150,7 @@ export default function BorrowingPage() {
                     disabled={isLoadingUsers}
                   >
                     {users?.map?.((item: any) => (
-                      <SelectItem value={item.id}>
+                      <SelectItem key={item.id} value={item.id}>
                         {item.username} ({item.email})
                       </SelectItem>
                     ))}
@@ -174,7 +174,7 @@ export default function BorrowingPage() {
                     disabled={isLoadingBooks}
                   >
                     {books?.map?.((item: any) => (
-                      <SelectItem value={item.id}>
+                      <SelectItem key={item.id} value={item.id}>
                         {item.title} ({item.author})
                       </SelectItem>
                     ))}
