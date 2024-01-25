@@ -11,6 +11,16 @@ export const booksApi = base.injectEndpoints({
         { type: "Books" as const, id: "LIST" },
       ],
     }),
+    getAvailableBooks: build.query<any, void>({
+      query: () => "/api/books/available",
+      transformResponse: (response: ServerResponse<any>) => response.data,
+      providesTags: (result = []) => [
+        ...result.map(({ id }: any) => ({ type: "Books", id }) as const),
+        ...result.map(({ id }: any) => ({ type: "Borrowed", id }) as const),
+        { type: "Books" as const, id: "LIST" },
+        { type: "Borrowed" as const, id: "LIST" },
+      ],
+    }),
     addBook: build.mutation<any, any>({
       query: (book) => ({
         url: "/api/books",
@@ -40,5 +50,10 @@ export const booksApi = base.injectEndpoints({
   }),
 });
 
-export const { useGetBooksQuery, useAddBookMutation, useDeleteBookMutation, useEditBookMutation } =
-  booksApi;
+export const {
+  useGetBooksQuery,
+  useGetAvailableBooksQuery,
+  useAddBookMutation,
+  useDeleteBookMutation,
+  useEditBookMutation,
+} = booksApi;

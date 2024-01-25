@@ -1,8 +1,10 @@
 from app import db
 from app.books.models import Book
+from app.borrowed.models import BorrowedBook
 from app.utils import is_valid_url, make_error_response, make_success_response
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
+from sqlalchemy import null
 
 
 blueprint = Blueprint("books", __name__)
@@ -14,6 +16,25 @@ def get_books():
     """Get all books."""
     books = Book.query.all()
     return make_success_response(books, "Books retrieved")
+
+
+@blueprint.route("/api/books/available", methods=["GET"])
+@jwt_required()
+def get_available_books():
+    """Get all available books."""
+
+    # Get all books that are not currently borrowed
+    available_books = (
+        db.session.query(Book)
+        .outerjoin(
+            BorrowedBook,
+            (BorrowedBook.book_id == Book.id) & (BorrowedBook.return_date == null()),
+        )
+        .filter(BorrowedBook.id == null())
+        .all()
+    )
+
+    return make_success_response(available_books, "Available books retrieved")
 
 
 @blueprint.route("/api/books", methods=["POST"])

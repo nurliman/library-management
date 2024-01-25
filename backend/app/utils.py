@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import jsonify
 
 
@@ -65,5 +65,18 @@ def is_valid_url(value: str) -> bool:
 
 def is_date_in_future(date: datetime):
     """Check if a datetime is in the future."""
+
     # print type of date
-    return datetime.now() < date
+    return datetime.now(timezone.utc) < date
+
+
+def calc_late_fee(due_date: datetime, return_date: datetime) -> float:
+    """Calculate the late fee."""
+
+    # return early when it's not late
+    if return_date <= due_date:
+        return 0.0
+
+    perday = 1000
+    days_late = (return_date - due_date).days
+    return perday * days_late
