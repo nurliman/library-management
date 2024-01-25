@@ -3,8 +3,12 @@ import type { ServerResponse } from "@/types";
 
 export const borrowedApi = base.injectEndpoints({
   endpoints: (build) => ({
-    getAllBorrowed: build.query<any, void>({
-      query: () => "/api/borrowed-books",
+    getAllBorrowed: build.query<any, any>({
+      query: ({ filter }: any) => ({
+        url: `/api/borrowed-books`,
+        method: "GET",
+        params: { filter },
+      }),
       transformResponse: (response: ServerResponse<any>) => response.data,
       providesTags: (result = []) => [
         ...result.map(({ id }: any) => ({ type: "Borrowed", id }) as const),

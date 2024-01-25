@@ -58,7 +58,8 @@ type ReturnBookSchema = z.infer<typeof returnBookSchema>;
 
 export default function BorrowingPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: borrowedBooks = [] } = useGetAllBorrowedQuery();
+  const [filter, setFilter] = useState("all");
+  const { data: borrowedBooks = [] } = useGetAllBorrowedQuery({ filter });
   const { data: books = [], isLoading: isLoadingBooks } = useGetAvailableBooksQuery();
   const { data: users = [], isLoading: isLoadingUsers } = useGetUsersQuery();
   const [borrowBook, { isLoading: isBorrowingBookLoading }] = useBorrowBookMutation();
@@ -108,6 +109,15 @@ export default function BorrowingPage() {
           <Text>View and manage your borrowing.</Text>
         </div>
         {isRoleMatch ? <Button onClick={() => setIsOpen(true)}>Borrow</Button> : null}
+      </div>
+
+      <div className="flex items-center justify-end">
+        <div className="max-w-sm space-y-6">
+          <Select value={filter} onValueChange={setFilter}>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="returned">Returned</SelectItem>
+          </Select>
+        </div>
       </div>
 
       <Card className="mt-6">

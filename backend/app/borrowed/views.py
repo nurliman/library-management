@@ -11,7 +11,7 @@ from app.borrowed.schemas import (
 from app.utils import calc_late_fee, make_error_response, make_success_response
 from datetime import datetime, timedelta, timezone
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from schema import SchemaError
 
 
@@ -22,10 +22,23 @@ blueprint = Blueprint("borrowed-books", __name__)
 @jwt_required()
 def get_borrowed_books():
     """Get all borrowed books."""
-    borrowed_books = BorrowedBook.query.order_by(BorrowedBook.id.desc()).all()
 
-    for i in range(len(borrowed_books)):
-        borrowed_books[i].member.password_hash = None
+    returned_only = request.args.get("filter", False) == "returned"
+
+    identity = get_jwt_identity()
+    user: User = User.query.get(identity)
+    borrowed_books = []
+
+    q = BorrowedBook.query
+
+    # if user is only member, return only his borrowed books
+    if user.role == UserRole.MEMBER:
+        q = q.filter_by(member_id=user.id)
+
+    if returned_only:
+        q = q.filter(BorrowedBook.return_date != None)
+
+    borrowed_books = q.all()
 
     return make_success_response(borrowed_books, "Borrowed books retrieved")
 
