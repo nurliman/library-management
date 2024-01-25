@@ -1,5 +1,6 @@
 from app import db
-from app.users.models import User
+from app.rbac import check_access
+from app.users.models import User, UserRole
 from app.books.models import Book
 from app.borrowed.models import BorrowedBook
 from app.borrowed.schemas import (
@@ -30,7 +31,7 @@ def get_borrowed_books():
 
 
 @blueprint.route("/api/borrowed-books", methods=["POST"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN, UserRole.ADMIN])
 def borrow_book():
     """Member borrows a book."""
     data = request.get_json()
@@ -66,7 +67,7 @@ def borrow_book():
 
 
 @blueprint.route("/api/borrowed-books/<int:borrowed_book_id>/return", methods=["POST"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN, UserRole.ADMIN])
 def return_book(borrowed_book_id):
     """Member returns a book."""
     borrowed_book = BorrowedBook.query.get(borrowed_book_id)
@@ -111,7 +112,7 @@ def return_book(borrowed_book_id):
 
 # extend the borrowed book
 @blueprint.route("/api/borrowed-books/<int:borrowed_book_id>/extend", methods=["POST"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN, UserRole.ADMIN])
 def extend_borrowed_book(borrowed_book_id):
     """Member extends the borrowed book."""
     borrowed_book = BorrowedBook.query.get(borrowed_book_id)

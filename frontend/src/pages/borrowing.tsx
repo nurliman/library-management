@@ -29,6 +29,8 @@ import {
   TextInput,
 } from "@tremor/react";
 import AppLayout from "@/components/AppLayout";
+import { useMatchRoles } from "@/hooks/useMatchRoles";
+import { UserRole } from "@/constants";
 
 const borrowBookSchema = z.object({
   book_id: z.coerce.number().min(1),
@@ -60,6 +62,7 @@ export default function BorrowingPage() {
   const { data: books = [], isLoading: isLoadingBooks } = useGetAvailableBooksQuery();
   const { data: users = [], isLoading: isLoadingUsers } = useGetUsersQuery();
   const [borrowBook, { isLoading: isBorrowingBookLoading }] = useBorrowBookMutation();
+  const isRoleMatch = useMatchRoles([UserRole.ADMIN, UserRole.SUPERADMIN]);
 
   const {
     register,
@@ -104,7 +107,7 @@ export default function BorrowingPage() {
           <Title>Borrowing</Title>
           <Text>View and manage your borrowing.</Text>
         </div>
-        <Button onClick={() => setIsOpen(true)}>Borrow</Button>
+        {isRoleMatch ? <Button onClick={() => setIsOpen(true)}>Borrow</Button> : null}
       </div>
 
       <Card className="mt-6">
@@ -232,7 +235,7 @@ const BorrowingItem = ({ data }: { data: any }) => {
   const [returnBook, { isLoading: isReturningBookLoading }] = useReturnBookMutation();
   const [extendBorrowing, { isLoading: isExtendingBorrowingLoading }] =
     useExtendBorrowingMutation();
-
+  const isRoleMatch = useMatchRoles([UserRole.ADMIN, UserRole.SUPERADMIN]);
   const isLoading = isReturningBookLoading || isExtendingBorrowingLoading;
   const isReturned = !!data?.return_date;
   const isLate = isReturned
@@ -293,40 +296,48 @@ const BorrowingItem = ({ data }: { data: any }) => {
             <Button variant="light" disabled={isLoading} onClick={() => setDetailsOpen(true)}>
               Details
             </Button>
-            <Button
-              variant="light"
-              disabled={isLoading || isReturned}
-              loading={isExtendingBorrowingLoading}
-              onClick={() => setExtFormOpen(true)}
-            >
-              Extend
-            </Button>
-            <Button
-              variant="light"
-              disabled={isLoading || isReturned}
-              loading={isReturningBookLoading}
-              onClick={() => setReturnOpen(true)}
-            >
-              Return
-            </Button>
+            {isRoleMatch ? (
+              <>
+                <Button
+                  variant="light"
+                  disabled={isLoading || isReturned}
+                  loading={isExtendingBorrowingLoading}
+                  onClick={() => setExtFormOpen(true)}
+                >
+                  Extend
+                </Button>
+                <Button
+                  variant="light"
+                  disabled={isLoading || isReturned}
+                  loading={isReturningBookLoading}
+                  onClick={() => setReturnOpen(true)}
+                >
+                  Return
+                </Button>
+              </>
+            ) : null}
           </div>
         </div>
       </ListItem>
 
-      <ExtendBorrowingModal
-        isLoading={isExtendingBorrowingLoading}
-        isOpen={isExtFormOpen}
-        onClose={(val: any) => setExtFormOpen(val)}
-        onSubmit={handleExtendBorrowing}
-      />
+      {isRoleMatch ? (
+        <>
+          <ExtendBorrowingModal
+            isLoading={isExtendingBorrowingLoading}
+            isOpen={isExtFormOpen}
+            onClose={(val: any) => setExtFormOpen(val)}
+            onSubmit={handleExtendBorrowing}
+          />
 
-      <ReturnBookModal
-        isLoading={isReturningBookLoading}
-        isOpen={isReturnOpen}
-        onClose={(val: any) => setReturnOpen(val)}
-        onSubmit={handleReturnBook}
-        dueDate={data.due_date}
-      />
+          <ReturnBookModal
+            isLoading={isReturningBookLoading}
+            isOpen={isReturnOpen}
+            onClose={(val: any) => setReturnOpen(val)}
+            onSubmit={handleReturnBook}
+            dueDate={data.due_date}
+          />
+        </>
+      ) : null}
 
       <Dialog open={isDetailsOpen} onClose={(val) => setDetailsOpen(val)} static={true}>
         <DialogPanel>

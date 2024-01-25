@@ -24,6 +24,8 @@ import {
   TextInput,
 } from "@tremor/react";
 import AppLayout from "@/components/AppLayout";
+import { useMatchRoles } from "@/hooks/useMatchRoles";
+import { UserRole } from "@/constants";
 
 const addBookSchema = z.object({
   author: z.string().min(1),
@@ -41,6 +43,7 @@ export default function BooksPage() {
   const [isOpen, setIsOpen] = useState(false);
   const { data } = useGetBooksQuery();
   const [addBook, { isLoading: isAddingBookLoading }] = useAddBookMutation();
+  const isRoleMatch = useMatchRoles([UserRole.ADMIN, UserRole.SUPERADMIN]);
 
   const {
     register,
@@ -71,7 +74,7 @@ export default function BooksPage() {
           <Title>Books</Title>
           <Text>List of books</Text>
         </div>
-        <Button onClick={() => setIsOpen(true)}>Add book</Button>
+        {isRoleMatch ? <Button onClick={() => setIsOpen(true)}>Add book</Button> : null}
       </div>
 
       <Card className="mt-6">
@@ -141,6 +144,7 @@ const BookItem = ({ data }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteBook, { isLoading: isDeletingBookLoading }] = useDeleteBookMutation();
   const [editBook, { isLoading: isEditingBookLoading }] = useEditBookMutation();
+  const isRoleMatch = useMatchRoles([UserRole.ADMIN, UserRole.SUPERADMIN]);
 
   const {
     register,
@@ -202,23 +206,27 @@ const BookItem = ({ data }: any) => {
             <Button variant="light" onClick={handleView}>
               View
             </Button>
-            <Button
-              variant="light"
-              loading={isEditingBookLoading}
-              disabled={isEditingBookLoading || isDeletingBookLoading}
-              onClick={() => setIsOpen(true)}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="light"
-              color="red"
-              loading={isDeletingBookLoading}
-              disabled={isDeletingBookLoading || isEditingBookLoading}
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
+            {isRoleMatch ? (
+              <>
+                <Button
+                  variant="light"
+                  loading={isEditingBookLoading}
+                  disabled={isEditingBookLoading || isDeletingBookLoading}
+                  onClick={() => setIsOpen(true)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="light"
+                  color="red"
+                  loading={isDeletingBookLoading}
+                  disabled={isDeletingBookLoading || isEditingBookLoading}
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              </>
+            ) : null}
           </div>
         </div>
       </ListItem>

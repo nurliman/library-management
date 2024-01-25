@@ -1,3 +1,5 @@
+import { UserRole } from "@/constants";
+
 export type Nullable<T> = T | null | undefined;
 
 export type ServerResponse<T> = {
@@ -28,3 +30,5 @@ export type LoginRequest = {
   email?: string;
   password: string;
 };
+
+export type UserRoles = (typeof UserRole)[keyof typeof UserRole];

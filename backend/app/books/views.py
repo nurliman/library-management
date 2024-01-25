@@ -1,6 +1,8 @@
 from app import db
 from app.books.models import Book
 from app.borrowed.models import BorrowedBook
+from app.rbac import check_access
+from app.users.models import UserRole
 from app.utils import is_valid_url, make_error_response, make_success_response
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
@@ -50,7 +52,7 @@ def get_book(book_id):
 
 
 @blueprint.route("/api/books", methods=["POST"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN, UserRole.ADMIN])
 def create_book():
     """Create a new book."""
     data = request.get_json()
@@ -77,7 +79,7 @@ def create_book():
 
 
 @blueprint.route("/api/books/<int:book_id>", methods=["PATCH"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN, UserRole.ADMIN])
 def update_book(book_id):
     """Update a book."""
     book = Book.query.get(book_id)
@@ -110,7 +112,7 @@ def update_book(book_id):
 
 
 @blueprint.route("/api/books/<int:book_id>", methods=["DELETE"])
-@jwt_required()
+@check_access(roles=[UserRole.SUPERADMIN, UserRole.ADMIN])
 def delete_book(book_id):
     """Delete a book."""
     book = Book.query.get(book_id)
