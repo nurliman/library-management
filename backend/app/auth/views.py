@@ -1,4 +1,4 @@
-from app import db
+from app import db, github
 from app.users.models import User
 from app.utils import is_email, make_error_response, make_success_response
 from flask import Blueprint, request
@@ -122,3 +122,10 @@ def refresh_token():
         },
         "Token refreshed",
     )
+
+
+# login github oauth
+@blueprint.route("/auth/github")
+def github_login():
+    """Login with GitHub OAuth."""
+    return github.authorize(scope="read:user")

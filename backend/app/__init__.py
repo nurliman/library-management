@@ -7,6 +7,7 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from dotenv import load_dotenv
+from flask_github import GitHub
 
 load_dotenv()
 
@@ -18,6 +19,7 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 migrate = Migrate()
 jwt = JWTManager()
+github = GitHub()
 
 
 def create_app():
@@ -41,6 +43,8 @@ def create_app():
             "JWT_REFRESH_TOKEN_EXPIRES", timedelta(days=30)
         ),
         SQLALCHEMY_DATABASE_URI=db_url,
+        GITHUB_CLIENT_ID=os.environ.get("GITHUB_CLIENT_ID"),
+        GITHUB_CLIENT_SECRET=os.environ.get("GITHUB_CLIENT_SECRET"),
     )
 
     CORS(app)
@@ -50,6 +54,8 @@ def create_app():
     migrate.init_app(app, db)
 
     jwt.init_app(app)
+
+    github.init_app(app)
 
     # apply the blueprints to the app
 

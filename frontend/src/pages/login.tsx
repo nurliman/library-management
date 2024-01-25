@@ -6,6 +6,7 @@ import { z } from "zod";
 import { toast } from "react-toastify";
 import { useLoginMutation } from "@/api/auth";
 import { Card, Title, Text, TextInput, Button } from "@tremor/react";
+import { env } from "@/env.mjs";
 import isEmail from "is-email";
 
 const schema = z.object({
@@ -80,9 +81,20 @@ export default function LoginPage() {
             />
           </div>
 
-          <Button type="submit" loading={isLoginLoading} disabled={isLoginLoading}>
-            Login
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button type="submit" loading={isLoginLoading} disabled={isLoginLoading}>
+              Login
+            </Button>
+            <Button
+              type="button"
+              color="gray"
+              onClick={() => {
+                window.location.href = `${env.NEXT_PUBLIC_BASE_URL}/auth/github`;
+              }}
+            >
+              <div className="flex items-center space-x-2">Login with Github</div>
+            </Button>
+          </div>
         </form>
       </Card>
     </main>
