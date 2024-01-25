@@ -21,7 +21,7 @@ def get_me():
 
 
 @blueprint.route("/api/users", methods=["GET"])
-@check_access(roles=[UserRole.SUPERADMIN])
+@check_access(roles=[UserRole.SUPERADMIN, UserRole.ADMIN])
 def get_users():
     """Get all users."""
     users = User.query.all()
