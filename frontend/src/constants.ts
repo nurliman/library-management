@@ -12,7 +12,8 @@ export const routes = [
   },
   { name: "Books", href: "/books" },
   { name: "Borrowing", href: "/borrowing" },
-  { name: "Returning", href: "/returning" },
+  // TODO: remove this
+  // { name: "Returning", href: "/returning" },
   { name: "Users", href: "/users", roles: [UserRole.SUPERADMIN] },
   { name: "Settings", href: "/settings", roles: [UserRole.SUPERADMIN] },
 ];

@@ -37,6 +37,18 @@ def get_available_books():
     return make_success_response(available_books, "Available books retrieved")
 
 
+@blueprint.route("/api/books/<int:book_id>", methods=["GET"])
+@jwt_required()
+def get_book(book_id):
+    """Get a book."""
+    book = Book.query.get(book_id)
+
+    if not book:
+        return make_error_response(404, "Book not found")
+
+    return make_success_response(book, "Book retrieved")
+
+
 @blueprint.route("/api/books", methods=["POST"])
 @jwt_required()
 def create_book():

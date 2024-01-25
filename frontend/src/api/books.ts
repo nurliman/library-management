@@ -21,6 +21,11 @@ export const booksApi = base.injectEndpoints({
         { type: "Borrowed" as const, id: "LIST" },
       ],
     }),
+    getBook: build.query<any, any>({
+      query: (id) => `/api/books/${id}`,
+      transformResponse: (response: ServerResponse<any>) => response.data,
+      providesTags: (_result, _error, id) => [{ type: "Books", id }],
+    }),
     addBook: build.mutation<any, any>({
       query: (book) => ({
         url: "/api/books",
@@ -53,6 +58,7 @@ export const booksApi = base.injectEndpoints({
 export const {
   useGetBooksQuery,
   useGetAvailableBooksQuery,
+  useGetBookQuery,
   useAddBookMutation,
   useDeleteBookMutation,
   useEditBookMutation,

@@ -9,6 +9,7 @@ import { useMe } from "@/hooks/useMe";
 import { useAppDispatch } from "@/hooks/redux";
 import { useRoutesByRole } from "@/hooks/useRoutesByRole";
 import { logout } from "@/store/authSlice";
+import startsWith from "lodash/startsWith";
 import Image from "next/image";
 
 export default function Navbar() {
@@ -54,12 +55,12 @@ export default function Navbar() {
                       key={item.name}
                       href={item.href}
                       className={clsx(
-                        pathname === item.href
+                        startsWith(pathname, item.href)
                           ? "border-slate-500 text-gray-900"
                           : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                         "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium",
                       )}
-                      aria-current={pathname === item.href ? "page" : undefined}
+                      aria-current={startsWith(pathname, item.href) ? "page" : undefined}
                     >
                       {item.name}
                     </a>
@@ -138,12 +139,12 @@ export default function Navbar() {
                   as="a"
                   href={item.href}
                   className={clsx(
-                    pathname === item.href
+                    startsWith(pathname, item.href)
                       ? "border-slate-500 bg-slate-50 text-slate-700"
                       : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
                     "block border-l-4 py-2 pl-3 pr-4 text-base font-medium",
                   )}
-                  aria-current={pathname === item.href ? "page" : undefined}
+                  aria-current={startsWith(pathname, item.href) ? "page" : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
