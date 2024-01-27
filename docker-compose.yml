@@ -45,5 +45,17 @@ services:
       GITHUB_CLIENT_ID: "your_github_client_id"
       GITHUB_CLIENT_SECRET: "your_github_client_secret"
 
+  frontend:
+    build:
+      context: frontend
+      args:
+        - NEXT_PUBLIC_BASE_URL=http://localhost:3001
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - 3000:80
+    links:
+      - backend
+
 volumes:
   dbdata:
