@@ -13,6 +13,11 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
       POSTGRES_DB: library_management
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   adminer:
     image: adminer
@@ -22,6 +27,23 @@ services:
       - 8080:8080
     links:
       - db
+
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - 3001:3001
+    links:
+      - db
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      JWT_SECRET_KEY: "vqZqCue7dhgECEE1HmGv5tm25BXR30Nf"
+      DATABASE_URL: "postgresql://admin:admin@db:5432/library_management"
+      GITHUB_CLIENT_ID: "your_github_client_id"
+      GITHUB_CLIENT_SECRET: "your_github_client_secret"
 
 volumes:
   dbdata:
