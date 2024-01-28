@@ -1,0 +1,72 @@
+name: "Deploy Backend"
+
+on:
+  push:
+    branches:
+      - "releases/main"
+
+env:
+  PROJECT_ID: nurliman-dev
+  REGION: asia-southeast2
+  SERVICE: library-management-backend
+  REPO: main
+
+  INSTANCE_MEMORY: 512Mi
+  INSTANCE_CPU: 1
+  MIN_INSTANCES: 0
+  MAX_INSTANCES: 10
+  MAX_CONCURRENT_REQUESTS: 80
+  REQUEST_TIMEOUT: 300
+
+jobs:
+  deploy:
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: "actions/checkout@v4"
+
+      - id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          token_format: access_token
+          workload_identity_provider: "${{ secrets.GCP_WIF_PROVIDER }}"
+          service_account: "${{ secrets.GCP_SERVICE_ACCOUNT }}"
+
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: "${{ env.REGION }}-docker.pkg.dev"
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }}:${{ github.sha }}"
+
+      - id: "deploy"
+        uses: "google-github-actions/deploy-cloudrun@v2"
+        with:
+          service: "${{ env.SERVICE }}"
+          image: "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }}:${{ github.sha }}"
+          env_vars: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          flags: |
+            --region ${{ env.GCP_REGION }} \
+            --allow-unauthenticated \
+            --memory "${{ env.INSTANCE_MEMORY }}" \
+            --cpu "${{ env.INSTANCE_CPU }}" \
+            --min-instances "${{ env.MIN_INSTANCES }}" \
+            --max-instances "${{ env.MAX_INSTANCES }}" \
+            --concurrency "${{ env.MAX_CONCURRENT_REQUESTS }}" \
+            --timeout "${{ env.REQUEST_TIMEOUT }}" \
+
+      - name: "Use output"
+        run: 'curl "${{ steps.deploy.outputs.url }}"'
