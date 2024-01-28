@@ -16,7 +16,7 @@ env:
   MIN_INSTANCES: 0
   MAX_INSTANCES: 10
   MAX_CONCURRENT_REQUESTS: 80
-  REQUEST_TIMEOUT: 300
+  REQUEST_TIMEOUT: 300s
 
 jobs:
   deploy:
@@ -54,19 +54,20 @@ jobs:
         uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           service: "${{ env.SERVICE }}"
+          region: "${{ env.REGION }}"
           image: "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/${{ env.SERVICE }}:${{ github.sha }}"
+          timeout: "${{ env.REQUEST_TIMEOUT }}"
           env_vars: |
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
           flags: |
-            --region ${{ env.GCP_REGION }} \
-            --allow-unauthenticated \
-            --memory "${{ env.INSTANCE_MEMORY }}" \
-            --cpu "${{ env.INSTANCE_CPU }}" \
-            --min-instances "${{ env.MIN_INSTANCES }}" \
-            --max-instances "${{ env.MAX_INSTANCES }}" \
-            --concurrency "${{ env.MAX_CONCURRENT_REQUESTS }}" \
-            --timeout "${{ env.REQUEST_TIMEOUT }}" \
+            --allow-unauthenticated
+            --memory=${{ env.INSTANCE_MEMORY }}
+            --cpu=${{ env.INSTANCE_CPU }}
+            --min-instances=${{ env.MIN_INSTANCES }}
+            --max-instances=${{ env.MAX_INSTANCES }}
+            --concurrency=${{ env.MAX_CONCURRENT_REQUESTS }}
+            --service-account=${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: "Use output"
         run: 'curl "${{ steps.deploy.outputs.url }}"'
