@@ -31,7 +31,7 @@ def create_app():
 
     if db_url is None:
         # default to a sqlite database in the instance folder
-        db_url = "sqlite:///zapps_library.sqlite"
+        db_url = "sqlite:///library_management.sqlite"
 
     app.config.from_mapping(
         # default secret that should be overridden in environ or config
