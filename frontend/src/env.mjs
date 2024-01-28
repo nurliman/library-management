@@ -4,7 +4,7 @@ import { z } from "zod";
 export const env = createEnv({
   server: {},
   client: {
-    NEXT_PUBLIC_BASE_URL: z.string().url().default("http://localhost:3001"),
+    NEXT_PUBLIC_BASE_URL: z.string().url().default("http://localhost:8080"),
   },
   runtimeEnv: {
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
