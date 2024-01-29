@@ -67,7 +67,6 @@ jobs:
             --min-instances=${{ env.MIN_INSTANCES }}
             --max-instances=${{ env.MAX_INSTANCES }}
             --concurrency=${{ env.MAX_CONCURRENT_REQUESTS }}
-            --service-account=${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: "Use output"
         run: 'curl "${{ steps.deploy.outputs.url }}"'
