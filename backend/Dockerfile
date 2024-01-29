@@ -19,9 +19,9 @@ COPY . /app
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-ENV APP_PORT=8080
+ENV PORT=8080
 
-EXPOSE ${APP_PORT}
+EXPOSE ${PORT}
 
 RUN chmod u+x ./entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
